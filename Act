@@ -1,0 +1,94 @@
+using System;
+
+class Program
+{
+    static int playerX = 10;
+    static int playerY = 5;
+
+    static int starX;
+    static int starY;
+
+    static int score = 0;
+
+    static Random random = new Random();
+
+    static void Main()
+    {
+        Console.CursorVisible = false;
+
+        SpawnStar();
+
+        while (true)
+        {
+            Console.Clear();
+
+            DrawGame();
+
+            ConsoleKeyInfo key = Console.ReadKey(true);
+
+            // Move the character
+            if (key.Key == ConsoleKey.UpArrow && playerY > 1)
+                playerY--;
+
+            if (key.Key == ConsoleKey.DownArrow && playerY < 18)
+                playerY++;
+
+            if (key.Key == ConsoleKey.LeftArrow && playerX > 1)
+                playerX--;
+
+            if (key.Key == ConsoleKey.RightArrow && playerX < 38)
+                playerX++;
+
+            // Check if player collected the star
+            if (playerX == starX && playerY == starY)
+            {
+                score++;
+                SpawnStar();
+            }
+
+            // Press Q to quit
+            if (key.Key == ConsoleKey.Q)
+                break;
+        }
+    }
+
+    static void DrawGame()
+    {
+        // Top border
+        Console.WriteLine("+----------------------------------------+");
+
+        for (int y = 1; y <= 18; y++)
+        {
+            Console.Write("|");
+
+            for (int x = 1; x <= 38; x++)
+            {
+                if (x == playerX && y == playerY)
+                    Console.Write("@");
+                else if (x == starX && y == starY)
+                    Console.Write("*");
+                else
+                    Console.Write(" ");
+            }
+
+            Console.WriteLine("|");
+        }
+
+        // Bottom border
+        Console.WriteLine("+----------------------------------------+");
+
+        // Real-time score
+        Console.WriteLine("Score: " + score);
+        Console.WriteLine("Use Arrow Keys to move | Press Q to quit");
+    }
+
+    static void SpawnStar()
+    {
+        do
+        {
+            starX = random.Next(1, 39);
+            starY = random.Next(1, 19);
+        }
+        while (starX == playerX && starY == playerY);
+    }
+}
